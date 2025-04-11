@@ -3,6 +3,7 @@ import LandingPage from "./pages";
 import Provider from "./Provider";
 import RentalListPage from "./pages/rental-list";
 import RentalDetailPage from "./pages/rental-list/[id]";
+import LoginPage from "./pages/login";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <LandingPage /> },
+      { path: "login", element: <LoginPage /> },
       {
         path: "rental-list",
         children: [
