@@ -1,6 +1,13 @@
 import styled from "@emotion/styled";
+import { getSocialUrl } from "../../apis/login";
 
 const LoginPage = () => {
+  const handleLoginButtonClick = async (params: Parameters<typeof getSocialUrl>[0]) => {
+    const res = await getSocialUrl(params);
+
+    window.location.href = res.url;
+  };
+
   return (
     <LoginContainer>
       <LoginBox>
@@ -11,13 +18,27 @@ const LoginPage = () => {
 
           <SocialButtons>
             {/* 카카오 로그인 버튼 */}
-            <SocialButton variant="kakao">
+            <SocialButton
+              variant="kakao"
+              onClick={() => {
+                handleLoginButtonClick({
+                  type: "KAKAO",
+                });
+              }}
+            >
               <ButtonImagePlaceholder />
               카카오로 시작하기
             </SocialButton>
 
             {/* 네이버 로그인 버튼 */}
-            <SocialButton variant="naver">
+            <SocialButton
+              variant="naver"
+              onClick={() => {
+                handleLoginButtonClick({
+                  type: "NAVER",
+                });
+              }}
+            >
               <ButtonImagePlaceholder />
               네이버로 시작하기
             </SocialButton>

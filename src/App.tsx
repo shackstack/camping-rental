@@ -15,7 +15,13 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <LandingPage /> },
-      { path: "login", element: <LoginPage /> },
+      {
+        path: "login",
+        children: [
+          { index: true, element: <LoginPage /> },
+          { path: "oauth-redirect", element: <RentalDetailPage /> },
+        ],
+      },
       {
         path: "rental-list",
         children: [
