@@ -4,7 +4,7 @@ import Provider from "./Provider";
 import RentalListPage from "./pages/rental-list";
 import RentalDetailPage from "./pages/rental-list/[id]";
 import LoginPage from "./pages/login";
-
+import OauthRedirectPage from "./pages/login/oauth-redirect";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
         path: "login",
         children: [
           { index: true, element: <LoginPage /> },
-          { path: "oauth-redirect", element: <RentalDetailPage /> },
+          { path: "oauth-redirect", element: <OauthRedirectPage /> },
         ],
       },
       {
