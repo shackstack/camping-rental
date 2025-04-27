@@ -44,10 +44,10 @@ const LoginPage = () => {
             </SocialButton>
 
             {/* 구글 로그인 버튼 */}
-            <SocialButton variant="google">
+            {/* <SocialButton variant="google">
               <ButtonImagePlaceholder />
               Google로 시작하기
-            </SocialButton>
+            </SocialButton> */}
           </SocialButtons>
         </SocialLoginContainer>
       </LoginBox>
