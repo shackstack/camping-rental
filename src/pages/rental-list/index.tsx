@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
+import Navbar from "../../components/Navbar";
 
 const categories = ["전체", "텐트", "조리용품", "가구", "조명", "침구", "보관용품"];
 
@@ -10,36 +11,43 @@ const RentalListPage = () => {
     activeCategory === "전체" ? sampleItems : sampleItems.filter((item) => item.category === activeCategory);
 
   return (
-    <Container>
-      <Header>
-        <Title>캠핑용품 대여</Title>
-        <Subtitle>필요한 캠핑용품을 합리적인 가격에 대여하세요</Subtitle>
-      </Header>
+    <>
+      <Navbar />
+      <Container>
+        <Header>
+          <Title>캠핑용품 대여</Title>
+          <Subtitle>필요한 캠핑용품을 합리적인 가격에 대여하세요</Subtitle>
+        </Header>
 
-      <FilterContainer>
-        {categories.map((category) => (
-          <FilterButton key={category} active={activeCategory === category} onClick={() => setActiveCategory(category)}>
-            {category}
-          </FilterButton>
-        ))}
-      </FilterContainer>
+        <FilterContainer>
+          {categories.map((category) => (
+            <FilterButton
+              key={category}
+              active={activeCategory === category}
+              onClick={() => setActiveCategory(category)}
+            >
+              {category}
+            </FilterButton>
+          ))}
+        </FilterContainer>
 
-      <CardGrid>
-        {filteredItems.map((item) => (
-          <Card key={item.id}>
-            <CardImage style={{ backgroundImage: `url(${item.image})` }} />
-            <CardContent>
-              <CardTitle>{item.name}</CardTitle>
-              <CardDescription>{item.description}</CardDescription>
-            </CardContent>
-            <CardFooter>
-              <Price>{item.price}</Price>
-              <RentButton>대여하기</RentButton>
-            </CardFooter>
-          </Card>
-        ))}
-      </CardGrid>
-    </Container>
+        <CardGrid>
+          {filteredItems.map((item) => (
+            <Card key={item.id}>
+              <CardImage style={{ backgroundImage: `url(${item.image})` }} />
+              <CardContent>
+                <CardTitle>{item.name}</CardTitle>
+                <CardDescription>{item.description}</CardDescription>
+              </CardContent>
+              <CardFooter>
+                <Price>{item.price}</Price>
+                <RentButton>대여하기</RentButton>
+              </CardFooter>
+            </Card>
+          ))}
+        </CardGrid>
+      </Container>
+    </>
   );
 };
 

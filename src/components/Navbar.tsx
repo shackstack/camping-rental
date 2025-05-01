@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
+import { theme } from "../theme";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -20,14 +21,17 @@ const Navbar = () => {
 };
 
 const navStyle = css`
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: ${theme.colors.background.paper};
+  box-shadow: ${theme.shadows.sm};
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 `;
 
 const containerStyle = css`
-  max-width: 1200px;
+  max-width: ${theme.breakpoints.wide};
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 ${theme.spacing.sm};
   height: 64px;
   display: flex;
   justify-content: space-between;
@@ -37,22 +41,22 @@ const containerStyle = css`
 const logoStyle = css`
   font-size: 1.5rem;
   font-weight: bold;
-  color: #333;
+  color: ${theme.colors.text.primary};
   cursor: pointer;
 `;
 
 const loginButtonStyle = css`
-  padding: 0.5rem 1rem;
-  background-color: #4a90e2;
+  padding: ${theme.spacing.xs} ${theme.spacing.sm};
+  background-color: ${theme.colors.primary.main};
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: ${theme.borderRadius.sm};
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #357abd;
+    background-color: ${theme.colors.primary.dark};
   }
 `;
 
