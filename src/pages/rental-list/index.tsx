@@ -1,14 +1,20 @@
-import React from "react";
+import React, { Suspense } from "react";
 import styled from "@emotion/styled";
 import Navbar from "../../components/Navbar";
+import { useProducts } from "../../hooks/@server/product";
+import { useNavigate } from "react-router-dom";
 
 const categories = ["전체", "텐트", "조리용품", "가구", "조명", "침구", "보관용품"];
 
-const RentalListPage = () => {
+const ProductList = () => {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = React.useState("전체");
+  const { data, fetchNextPage, hasNextPage } = useProducts();
 
-  const filteredItems =
-    activeCategory === "전체" ? sampleItems : sampleItems.filter((item) => item.category === activeCategory);
+  const products = data.pages.flatMap((page) => page);
+
+  const filteredProducts =
+    activeCategory === "전체" ? products : products.filter((product) => product.code === activeCategory);
 
   return (
     <>
@@ -32,24 +38,58 @@ const RentalListPage = () => {
         </FilterContainer>
 
         <CardGrid>
-          {filteredItems.map((item) => (
-            <Card key={item.id}>
-              <CardImage style={{ backgroundImage: `url(${item.image})` }} />
+          {filteredProducts.map((product) => (
+            <Card key={product.id} onClick={() => navigate(`/rental-list/${product.id}`)}>
+              <CardImage style={{ backgroundImage: `url(${product.representativeImageUploadFileName})` }} />
               <CardContent>
-                <CardTitle>{item.name}</CardTitle>
-                <CardDescription>{item.description}</CardDescription>
+                <CardTitle>{product.title}</CardTitle>
+                <CardDescription>{product.member.nickname}</CardDescription>
               </CardContent>
               <CardFooter>
-                <Price>{item.price}</Price>
+                <Price>{product.price.disCountedPrice.toLocaleString()}원/일</Price>
                 <RentButton>대여하기</RentButton>
               </CardFooter>
             </Card>
           ))}
         </CardGrid>
+
+        {hasNextPage && <LoadMoreButton onClick={() => fetchNextPage()}>더 보기</LoadMoreButton>}
       </Container>
     </>
   );
 };
+
+const RentalListPage = () => {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <ProductList />
+    </Suspense>
+  );
+};
+
+const LoadingFallback = () => (
+  <Container>
+    <Header>
+      <Title>캠핑용품 대여</Title>
+      <Subtitle>필요한 캠핑용품을 합리적인 가격에 대여하세요</Subtitle>
+    </Header>
+    <CardGrid>
+      {[1, 2, 3, 4, 5, 6].map((i) => (
+        <Card key={i}>
+          <CardImage style={{ backgroundColor: "#f0f0f0" }} />
+          <CardContent>
+            <CardTitle style={{ backgroundColor: "#f0f0f0", height: "1.5rem", width: "80%" }} />
+            <CardDescription style={{ backgroundColor: "#f0f0f0", height: "1rem", width: "60%" }} />
+          </CardContent>
+          <CardFooter>
+            <Price style={{ backgroundColor: "#f0f0f0", height: "1.2rem", width: "40%" }} />
+            <RentButton style={{ backgroundColor: "#f0f0f0", color: "transparent" }}>대여하기</RentButton>
+          </CardFooter>
+        </Card>
+      ))}
+    </CardGrid>
+  </Container>
+);
 
 export default RentalListPage;
 
@@ -168,6 +208,23 @@ const RentButton = styled.button`
   border: none;
   border-radius: 4px;
   font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #43a047;
+  }
+`;
+
+const LoadMoreButton = styled.button`
+  display: block;
+  margin: 2rem auto;
+  padding: 0.8rem 2rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
 
