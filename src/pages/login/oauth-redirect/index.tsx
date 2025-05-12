@@ -20,23 +20,44 @@ const loginKakao = async ({ code }: { code: string }) => {
     },
   );
 
-  const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
-    "/members/social",
-    {
-      socialAccessToken: data.access_token,
-      joinType: "KAKAO",
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
+  try {
+    const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
+      "/members/social",
+      {
+        socialAccessToken: data.access_token,
+        joinType: "KAKAO",
       },
-    },
-  );
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
 
-  localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
 
-  window.location.href = "/";
+    window.location.href = "/";
+  } catch (error) {
+    const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
+      "/login/social",
+      {
+        socialAccessToken: data.access_token,
+        loginType: "KAKAO",
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+
+    window.location.href = "/";
+    return;
+  }
 };
 
 const loginNaver = async ({ code }: { code: string }) => {
@@ -55,23 +76,38 @@ const loginNaver = async ({ code }: { code: string }) => {
     },
   );
 
-  const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
-    "/members/social",
-    {
-      socialAccessToken: data.access_token,
-      joinType: "NAVER",
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
+  try {
+    const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
+      "/members/social",
+      {
+        socialAccessToken: data.access_token,
+        joinType: "NAVER",
       },
-    },
-  );
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
 
-  localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
 
-  window.location.href = "/";
+    window.location.href = "/";
+  } catch (error) {
+    const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
+      "/login/social",
+      {
+        socialAccessToken: data.access_token,
+        loginType: "NAVER",
+      },
+    );
+
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+
+    window.location.href = "/";
+  }
 };
 
 const OauthRedirectPage = () => {

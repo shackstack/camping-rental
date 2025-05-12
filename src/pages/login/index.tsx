@@ -1,13 +1,6 @@
 import styled from "@emotion/styled";
-import { getSocialUrl } from "../../apis/login";
 
 const LoginPage = () => {
-  const handleLoginButtonClick = async (params: Parameters<typeof getSocialUrl>[0]) => {
-    const res = await getSocialUrl(params);
-
-    window.location.href = res.url;
-  };
-
   return (
     <LoginContainer>
       <LoginBox>
@@ -21,9 +14,7 @@ const LoginPage = () => {
             <SocialButton
               variant="kakao"
               onClick={() => {
-                handleLoginButtonClick({
-                  type: "KAKAO",
-                });
+                window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${import.meta.env.VITE_KAKAO_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}&response_type=code`;
               }}
             >
               <ButtonImagePlaceholder />
@@ -34,9 +25,7 @@ const LoginPage = () => {
             <SocialButton
               variant="naver"
               onClick={() => {
-                handleLoginButtonClick({
-                  type: "NAVER",
-                });
+                window.location.href = `https://nid.naver.com/oauth2.0/authorize?client_id=${import.meta.env.VITE_NAVER_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_NAVER_REDIRECT_URI}&response_type=code`;
               }}
             >
               <ButtonImagePlaceholder />
