@@ -40,7 +40,7 @@ const ProductList = () => {
         <CardGrid>
           {filteredProducts.map((product) => (
             <Card key={product.id} onClick={() => navigate(`/rental-list/${product.id}`)}>
-              <CardImage style={{ backgroundImage: `url(${product.representativeImageUploadFileName})` }} />
+              <CardImage src={product.representativeImageUploadFileName} alt={product.title} />
               <CardContent>
                 <CardTitle>{product.title}</CardTitle>
                 <CardDescription>{product.member.nickname}</CardDescription>
@@ -76,7 +76,7 @@ const LoadingFallback = () => (
     <CardGrid>
       {[1, 2, 3, 4, 5, 6].map((i) => (
         <Card key={i}>
-          <CardImage style={{ backgroundColor: "#f0f0f0" }} />
+          <CardImage style={{ backgroundColor: "#f0f0f0" }} alt="로딩 이미지" />
           <CardContent>
             <CardTitle style={{ backgroundColor: "#f0f0f0", height: "1.5rem", width: "80%" }} />
             <CardDescription style={{ backgroundColor: "#f0f0f0", height: "1rem", width: "60%" }} />
@@ -161,11 +161,11 @@ const Card = styled.div`
   }
 `;
 
-const CardImage = styled.div`
+const CardImage = styled.img`
   height: 200px;
+  width: 100%;
+  object-fit: cover;
   background-color: #f0f0f0;
-  background-size: cover;
-  background-position: center;
 `;
 
 const CardContent = styled.div`
