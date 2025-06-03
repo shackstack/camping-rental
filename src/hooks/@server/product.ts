@@ -4,7 +4,7 @@ import { getProducts, getProductDetail } from "../../apis/product";
 export const useProducts = (params?: Parameters<typeof getProducts>[0]) => {
   return useSuspenseInfiniteQuery({
     queryKey: ["products", params],
-    queryFn: ({ pageParam }) => getProducts({ ...params, cursorIndex: pageParam }),
+    queryFn: ({ pageParam }) => getProducts({ ...params, cursorIndex: pageParam || 1, size: 20 }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       if (lastPage.length === 0) return undefined;

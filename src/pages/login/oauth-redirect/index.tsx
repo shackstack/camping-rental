@@ -60,7 +60,7 @@ const loginKakao = async ({ code }: { code: string }) => {
   }
 };
 
-const loginNaver = async ({ code }: { code: string }) => {
+const loginNaver = async ({ code, state }: { code: string; state: string }) => {
   const { data } = await axios.post(
     "https://nid.naver.com/oauth2.0/token",
     {
@@ -68,6 +68,7 @@ const loginNaver = async ({ code }: { code: string }) => {
       client_id: import.meta.env.VITE_NAVER_CLIENT_ID,
       client_secret: import.meta.env.VITE_NAVER_CLIENT_SECRET,
       code,
+      state,
     },
     {
       headers: {
@@ -121,7 +122,7 @@ const OauthRedirectPage = () => {
     }
 
     if (searchParams.get("join-type") === "NAVER") {
-      loginNaver({ code: searchParams.get("code")! });
+      loginNaver({ code: searchParams.get("code")!, state: searchParams.get("state")! });
     }
   }, [searchParams.get("code")]);
 

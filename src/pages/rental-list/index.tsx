@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense, useState } from "react";
 import styled from "@emotion/styled";
 import Navbar from "../../components/Navbar";
 import { useProducts } from "../../hooks/@server/product";
@@ -8,7 +8,7 @@ const categories = ["전체", "텐트", "조리용품", "가구", "조명", "침
 
 const ProductList = () => {
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = React.useState("전체");
+  const [activeCategory, setActiveCategory] = useState("전체");
   const { data, fetchNextPage, hasNextPage } = useProducts();
 
   const products = data.pages.flatMap((page) => page);
