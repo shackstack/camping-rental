@@ -20,26 +20,47 @@ const loginKakao = async ({ code }: { code: string }) => {
     },
   );
 
-  const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
-    "/members/social",
-    {
-      socialAccessToken: data.access_token,
-      joinType: "KAKAO",
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
+  try {
+    const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
+      "/members/social",
+      {
+        socialAccessToken: data.access_token,
+        joinType: "KAKAO",
       },
-    },
-  );
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
 
-  localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
 
-  window.location.href = "/";
+    window.location.href = "/";
+  } catch (error) {
+    const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
+      "/login/social",
+      {
+        socialAccessToken: data.access_token,
+        loginType: "KAKAO",
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+
+    window.location.href = "/";
+    return;
+  }
 };
 
-const loginNaver = async ({ code }: { code: string }) => {
+const loginNaver = async ({ code, state }: { code: string; state: string }) => {
   const { data } = await axios.post(
     "https://nid.naver.com/oauth2.0/token",
     {
@@ -47,6 +68,7 @@ const loginNaver = async ({ code }: { code: string }) => {
       client_id: import.meta.env.VITE_NAVER_CLIENT_ID,
       client_secret: import.meta.env.VITE_NAVER_CLIENT_SECRET,
       code,
+      state,
     },
     {
       headers: {
@@ -55,23 +77,38 @@ const loginNaver = async ({ code }: { code: string }) => {
     },
   );
 
-  const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
-    "/members/social",
-    {
-      socialAccessToken: data.access_token,
-      joinType: "NAVER",
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
+  try {
+    const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
+      "/members/social",
+      {
+        socialAccessToken: data.access_token,
+        joinType: "NAVER",
       },
-    },
-  );
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
 
-  localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
 
-  window.location.href = "/";
+    window.location.href = "/";
+  } catch (error) {
+    const { accessToken, refreshToken }: components["schemas"]["JoinSocialResponse"] = await https.post(
+      "/login/social",
+      {
+        socialAccessToken: data.access_token,
+        loginType: "NAVER",
+      },
+    );
+
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+
+    window.location.href = "/";
+  }
 };
 
 const OauthRedirectPage = () => {
@@ -85,7 +122,7 @@ const OauthRedirectPage = () => {
     }
 
     if (searchParams.get("join-type") === "NAVER") {
-      loginNaver({ code: searchParams.get("code")! });
+      loginNaver({ code: searchParams.get("code")!, state: searchParams.get("state")! });
     }
   }, [searchParams.get("code")]);
 

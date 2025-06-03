@@ -1,0 +1,35 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 코드 컨벤션
+
+이 프로젝트는 일관된 코드 스타일과 구조를 유지하기 위해 다음 코딩 컨벤션을 따릅니다.
+
+## 코드 스타일
+
+프로젝트는 [.prettierrc.js](mdc:.prettierrc.js)와 [eslint.config.js](mdc:eslint.config.js)를 사용하여 코드 스타일을 관리합니다.
+
+### 주요 Prettier 설정
+- 탭을 사용하여 들여쓰기 (탭 너비: 2)
+- 최대 줄 길이: 120자
+- 작은 따옴표(') 사용
+- 후행 쉼표 허용
+- 화살표 함수의 단일 매개변수에 괄호 생략 (x => x)
+
+### 주요 ESLint 규칙
+- React 18.3 버전 설정
+- JSX Runtime 사용
+- React Hooks 규칙 적용
+- 한글이 포함된 커스텀 훅 허용
+- 접근성(a11y) 규칙 적용
+
+## 임포트 순서
+
+임포트 순서는 다음과 같이 정렬됩니다:
+
+1. 서드파티 모듈
+2. React 관련 모듈
+3. 로컬 모듈 (lib, utils, constants, components, pages, hooks, types 순)
+4. 상대 경로 임포트

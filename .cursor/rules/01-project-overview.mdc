@@ -1,0 +1,20 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 프로젝트 개요
+
+c8c-web은 React와 TypeScript를 사용한 웹 애플리케이션 프로젝트입니다. 이 프로젝트는 Vite를 빌드 도구로 사용하며, React Router를 통한 라우팅, React Query를 통한 데이터 관리를 포함합니다.
+
+## 주요 파일 및 디렉토리
+
+- [src/main.tsx](mdc:src/main.tsx): 애플리케이션의 진입점
+- [src/App.tsx](mdc:src/App.tsx): 라우터 구성 및 앱 초기화
+- [src/components/](mdc:src/components): 재사용 가능한 컴포넌트
+- [src/pages/](mdc:src/pages): 애플리케이션의 페이지 컴포넌트
+- [src/hooks/](mdc:src/hooks): 커스텀 React 훅
+- [src/utils/](mdc:src/utils): 유틸리티 함수
+- [src/apis/](mdc:src/apis): API 통신 관련 코드
+- [src/types/](mdc:src/types): TypeScript 타입 정의
+- [src/i18n/](mdc:src/i18n): 국제화 관련 파일
