@@ -91,7 +91,28 @@ const RentalDetailPage = () => {
                 ))}
               </OptionSelectWrapper>
             )}
-            <RentButton>대여하기</RentButton>
+            {product.options && product.options.length > 0 && (
+              <SelectedOptionsSummary>
+                {product.options.map((option) => {
+                  const selectedChoiceId = selectedOptions[option.id];
+                  const selectedChoice = option.choices.find((c) => c.id === selectedChoiceId);
+                  return (
+                    <div key={option.id}>
+                      <strong>{option.title}:</strong> {selectedChoice ? selectedChoice.name : "미선택"}
+                    </div>
+                  );
+                })}
+              </SelectedOptionsSummary>
+            )}
+            <RentButton
+              disabled={
+                product.options &&
+                product.options.length > 0 &&
+                product.options.some((option) => !selectedOptions[option.id])
+              }
+            >
+              대여하기
+            </RentButton>
             <SectionTitle>상품 설명</SectionTitle>
             <Description>{product.description}</Description>
           </RightSection>
@@ -325,4 +346,13 @@ const OptionSelect = styled.select`
   border: 1px solid #ccc;
   background: #fafbfc;
   min-width: 180px;
+`;
+
+const SelectedOptionsSummary = styled.div`
+  margin-bottom: 0.7rem;
+  font-size: 1.02rem;
+  color: #444;
+  div {
+    margin-bottom: 0.2rem;
+  }
 `;
