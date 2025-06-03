@@ -162,8 +162,8 @@ const Card = styled.div`
 `;
 
 const CardImage = styled.img`
-  height: 200px;
   width: 100%;
+  aspect-ratio: 1/1;
   object-fit: cover;
   background-color: #f0f0f0;
 `;
@@ -176,6 +176,10 @@ const CardTitle = styled.h3`
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
   color: #333;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const CardDescription = styled.p`
