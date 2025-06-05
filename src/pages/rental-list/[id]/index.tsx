@@ -311,6 +311,7 @@ const DetailImage = styled.img`
   border-radius: 10px;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.07);
   object-fit: contain;
+  margin: 0 auto;
 `;
 
 const NoDetailImage = styled.div`
