@@ -1,5 +1,5 @@
 import { useProductDetail } from "../../../hooks/@server/product";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import { useState } from "react";
 
@@ -9,6 +9,7 @@ const RentalDetailPage = () => {
   const { data: product } = useProductDetail(productId);
   const [mainImageIdx, setMainImageIdx] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<{ [optionId: number]: number | undefined }>({});
+  const navigate = useNavigate();
 
   if (!product) return <div>존재하지 않는 상품입니다.</div>;
 
@@ -16,6 +17,14 @@ const RentalDetailPage = () => {
 
   return (
     <>
+      <Header>
+        <BackButton onClick={() => navigate(-1)}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 20.5L6 12L15 3.5" stroke="#2A2A2E" stroke-width="1.5" stroke-linecap="square" />
+          </svg>
+        </BackButton>
+        <HeaderTitle>상품 상세</HeaderTitle>
+      </Header>
       <PageWrapper>
         <ContentWrapper>
           <LeftSection>
@@ -311,7 +320,6 @@ const DetailImage = styled.img`
   border-radius: 10px;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.07);
   object-fit: contain;
-  margin: 0 auto;
 `;
 
 const NoDetailImage = styled.div`
@@ -356,4 +364,35 @@ const SelectedOptionsSummary = styled.div`
   div {
     margin-bottom: 0.2rem;
   }
+`;
+
+const Header = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 1.1rem 2rem 1.1rem 1.2rem;
+  border-bottom: 1px solid #eee;
+`;
+
+const BackButton = styled.button`
+  background: none;
+  border: none;
+  color: #388e3c;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.3rem 0.7rem 0.3rem 0.2rem;
+  border-radius: 6px;
+  transition: background 0.15s;
+`;
+
+const HeaderTitle = styled.h1`
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0;
 `;
