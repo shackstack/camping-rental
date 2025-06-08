@@ -57,7 +57,7 @@ const RentalDetailPage = () => {
               <Price>{product.price.disCountedPrice.toLocaleString()}원</Price>
               {product.price.discountRate > 0 && (
                 <Discount>
-                  {product.price.discountRate}%↓{" "}
+                  {product.price.discountRate * 100}%↓{" "}
                   <OriginPrice>{product.price.originalPrice.toLocaleString()}원</OriginPrice>
                 </Discount>
               )}
