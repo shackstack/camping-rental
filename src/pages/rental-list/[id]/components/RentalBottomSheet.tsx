@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { components } from "../../../../types/server";
 import styled from "@emotion/styled";
 
@@ -10,9 +10,6 @@ interface RentalBottomSheetProps {
 
 const RentalBottomSheet = ({ product, open, onClose }: RentalBottomSheetProps) => {
   const [selectedOptions, setSelectedOptions] = useState<{ [optionId: number]: number | undefined }>({});
-
-  // open이 false면 렌더링하지 않음
-  if (!open) return null;
 
   // 총 가격 계산 함수
   const getTotalPrice = () => {
@@ -30,54 +27,68 @@ const RentalBottomSheet = ({ product, open, onClose }: RentalBottomSheetProps) =
     return total;
   };
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [open]);
+
   return (
-    <BottomSheet>
-      <CloseButton onClick={onClose} aria-label="닫기">
-        ×
-      </CloseButton>
-      <BottomSheetContent>
-        <div>
-          <strong>선택 옵션:</strong>
-          {product.options && product.options.length > 0 && (
-            <OptionSelectWrapper>
-              {product.options.map((option) => (
-                <OptionBox key={option.id}>
-                  <OptionLabel>{option.title}</OptionLabel>
-                  <OptionSelect
-                    value={selectedOptions[option.id] ?? ""}
-                    onChange={(e) => {
-                      const value = e.target.value ? Number(e.target.value) : undefined;
-                      setSelectedOptions((prev) => ({ ...prev, [option.id]: value }));
-                    }}
-                  >
-                    <option value="">선택하세요</option>
-                    {option.choices.map((choice) => (
-                      <option key={choice.id} value={choice.id}>
-                        {choice.name}
-                        {choice.additionalPrice > 0 ? ` (+${choice.additionalPrice.toLocaleString()}원)` : ""}
-                      </option>
-                    ))}
-                  </OptionSelect>
-                </OptionBox>
-              ))}
-            </OptionSelectWrapper>
-          )}
-        </div>
-        <PriceSummary>
-          <span>총 결제금액</span>
-          <TotalPrice>{getTotalPrice().toLocaleString()}원</TotalPrice>
-        </PriceSummary>
-        <BottomRentButton
-          disabled={
-            product.options &&
-            product.options.length > 0 &&
-            product.options.some((option) => !selectedOptions[option.id])
-          }
-        >
-          대여하기
-        </BottomRentButton>
-      </BottomSheetContent>
-    </BottomSheet>
+    open && (
+      <BottomSheet>
+        <CloseButton onClick={onClose} aria-label="닫기">
+          ×
+        </CloseButton>
+        <BottomSheetContent>
+          <div>
+            <strong>선택 옵션:</strong>
+            {product.options && product.options.length > 0 && (
+              <OptionSelectWrapper>
+                {product.options.map((option) => (
+                  <OptionBox key={option.id}>
+                    <OptionLabel>{option.title}</OptionLabel>
+                    <OptionSelect
+                      value={selectedOptions[option.id] ?? ""}
+                      onChange={(e) => {
+                        const value = e.target.value ? Number(e.target.value) : undefined;
+                        setSelectedOptions((prev) => ({ ...prev, [option.id]: value }));
+                      }}
+                    >
+                      <option value="">선택하세요</option>
+                      {option.choices.map((choice) => (
+                        <option key={choice.id} value={choice.id}>
+                          {choice.name}
+                          {choice.additionalPrice > 0 ? ` (+${choice.additionalPrice.toLocaleString()}원)` : ""}
+                        </option>
+                      ))}
+                    </OptionSelect>
+                  </OptionBox>
+                ))}
+              </OptionSelectWrapper>
+            )}
+          </div>
+          <PriceSummary>
+            <span>총 결제금액</span>
+            <TotalPrice>{getTotalPrice().toLocaleString()}원</TotalPrice>
+          </PriceSummary>
+          <BottomRentButton
+            disabled={
+              product.options &&
+              product.options.length > 0 &&
+              product.options.some((option) => !selectedOptions[option.id])
+            }
+          >
+            대여하기
+          </BottomRentButton>
+        </BottomSheetContent>
+      </BottomSheet>
+    )
   );
 };
 
