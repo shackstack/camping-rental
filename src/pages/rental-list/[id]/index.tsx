@@ -2,7 +2,9 @@ import { useProductDetail } from "../../../hooks/@server/product";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import { useState } from "react";
-
+import RentalBottomSheet from "./components/RentalBottomSheet";
+import Spacing from "../../../components/Spacing";
+import Divider from "../../../components/Divider";
 const RentalDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const productId = Number(id);
@@ -113,15 +115,7 @@ const RentalDetailPage = () => {
                 })}
               </SelectedOptionsSummary>
             )}
-            <RentButton
-              disabled={
-                product.options &&
-                product.options.length > 0 &&
-                product.options.some((option) => !selectedOptions[option.id])
-              }
-            >
-              대여하기
-            </RentButton>
+            <Divider />
             <SectionTitle>상품 설명</SectionTitle>
             <Description>{product.description}</Description>
           </RightSection>
@@ -134,6 +128,9 @@ const RentalDetailPage = () => {
           <NoDetailImage>상세 이미지가 없습니다.</NoDetailImage>
         )}
       </DetailImagesWrapper>
+      {/* 바텀시트 */}
+      <Spacing height={200} />
+      <RentalBottomSheet product={product} selectedOptions={selectedOptions} />
     </>
   );
 };
@@ -141,7 +138,6 @@ const RentalDetailPage = () => {
 export default RentalDetailPage;
 
 const PageWrapper = styled.div`
-  background: #fafbfc;
   min-height: 100vh;
   padding: 2rem 0 0 0;
 `;
@@ -152,8 +148,7 @@ const ContentWrapper = styled.div`
   max-width: 1100px;
   margin: 0 auto;
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+
   padding: 2.5rem 2rem;
   @media (max-width: 900px) {
     flex-direction: column;
@@ -173,7 +168,6 @@ const MainImageBox = styled.div`
   width: 420px;
   height: 320px;
   background: #f5f5f5;
-  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -278,22 +272,6 @@ const InfoTable = styled.table`
   }
 `;
 
-const RentButton = styled.button`
-  background: #4caf50;
-  color: #fff;
-  font-size: 1.15rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  padding: 0.9rem 0;
-  margin: 1.2rem 0 0.5rem 0;
-  cursor: pointer;
-  transition: background 0.2s;
-  &:hover {
-    background: #388e3c;
-  }
-`;
-
 const SectionTitle = styled.h2`
   font-size: 1.15rem;
   font-weight: 600;
@@ -318,8 +296,9 @@ const DetailImage = styled.img`
   width: 100%;
   max-width: 800px;
   border-radius: 10px;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.07);
   object-fit: contain;
+
+  margin: 0 auto;
 `;
 
 const NoDetailImage = styled.div`
