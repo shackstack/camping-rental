@@ -10,8 +10,8 @@ const RentalDetailPage = () => {
   const productId = Number(id);
   const { data: product } = useProductDetail(productId);
   const [mainImageIdx, setMainImageIdx] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState<{ [optionId: number]: number | undefined }>({});
   const navigate = useNavigate();
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   if (!product) return <div>존재하지 않는 상품입니다.</div>;
 
@@ -78,43 +78,6 @@ const RentalDetailPage = () => {
                 </td>
               </tr>
             </InfoTable>
-            {product.options && product.options.length > 0 && (
-              <OptionSelectWrapper>
-                {product.options.map((option) => (
-                  <OptionBox key={option.id}>
-                    <OptionLabel>{option.title}</OptionLabel>
-                    <OptionSelect
-                      value={selectedOptions[option.id] ?? ""}
-                      onChange={(e) => {
-                        const value = e.target.value ? Number(e.target.value) : undefined;
-                        setSelectedOptions((prev) => ({ ...prev, [option.id]: value }));
-                      }}
-                    >
-                      <option value="">선택하세요</option>
-                      {option.choices.map((choice) => (
-                        <option key={choice.id} value={choice.id}>
-                          {choice.name}
-                          {choice.additionalPrice > 0 ? ` (+${choice.additionalPrice.toLocaleString()}원)` : ""}
-                        </option>
-                      ))}
-                    </OptionSelect>
-                  </OptionBox>
-                ))}
-              </OptionSelectWrapper>
-            )}
-            {product.options && product.options.length > 0 && (
-              <SelectedOptionsSummary>
-                {product.options.map((option) => {
-                  const selectedChoiceId = selectedOptions[option.id];
-                  const selectedChoice = option.choices.find((c) => c.id === selectedChoiceId);
-                  return (
-                    <div key={option.id}>
-                      <strong>{option.title}:</strong> {selectedChoice ? selectedChoice.name : "미선택"}
-                    </div>
-                  );
-                })}
-              </SelectedOptionsSummary>
-            )}
             <Divider />
             <SectionTitle>상품 설명</SectionTitle>
             <Description>{product.description}</Description>
@@ -130,7 +93,8 @@ const RentalDetailPage = () => {
       </DetailImagesWrapper>
       {/* 바텀시트 */}
       <Spacing height={200} />
-      <RentalBottomSheet product={product} selectedOptions={selectedOptions} />
+      <RentalBottomSheet product={product} open={isBottomSheetOpen} onClose={() => setIsBottomSheetOpen(false)} />
+      {!isBottomSheetOpen && <FloatingButton onClick={() => setIsBottomSheetOpen(true)}>대여하기</FloatingButton>}
     </>
   );
 };
@@ -308,43 +272,6 @@ const NoDetailImage = styled.div`
   text-align: center;
 `;
 
-const OptionSelectWrapper = styled.div`
-  margin: 1.2rem 0 1.5rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-`;
-
-const OptionBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-`;
-
-const OptionLabel = styled.label`
-  font-size: 1.08rem;
-  color: #333;
-  min-width: 90px;
-`;
-
-const OptionSelect = styled.select`
-  font-size: 1.08rem;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background: #fafbfc;
-  min-width: 180px;
-`;
-
-const SelectedOptionsSummary = styled.div`
-  margin-bottom: 0.7rem;
-  font-size: 1.02rem;
-  color: #444;
-  div {
-    margin-bottom: 0.2rem;
-  }
-`;
-
 const Header = styled.header`
   position: sticky;
   top: 0;
@@ -374,4 +301,24 @@ const HeaderTitle = styled.h1`
   font-weight: 700;
   color: #222;
   margin: 0;
+`;
+
+const FloatingButton = styled.button`
+  position: fixed;
+  right: 24px;
+  bottom: 32px;
+  z-index: 300;
+  background: #4caf50;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 50px;
+  padding: 1.1rem 2.1rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.13);
+  cursor: pointer;
+  transition: background 0.18s;
+  &:hover {
+    background: #388e3c;
+  }
 `;
