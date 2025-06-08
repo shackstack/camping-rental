@@ -68,8 +68,19 @@ const RentalDetailPage = () => {
                 <td>{product.stockCount}개</td>
               </tr>
               <tr>
-                <th>대여자</th>
-                <td>{product.member.nickname}</td>
+                <th rowSpan={4}>판매자</th>
+              </tr>
+              <tr>
+                <th>닉네임</th>
+                <td>{product.sellerInformation.nickname}</td>
+              </tr>
+              <tr>
+                <th>이메일</th>
+                <td>{product.sellerInformation.email}</td>
+              </tr>
+              <tr>
+                <th>연락처</th>
+                <td>{product.sellerInformation.phone}</td>
               </tr>
               <tr>
                 <th>배송</th>
@@ -218,21 +229,31 @@ const InfoTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin: 1.2rem 0 1.5rem 0;
+  border: 1px solid #e0e0e0;
   th,
   td {
     padding: 0.5rem 0.7rem;
     text-align: left;
     font-size: 1.05rem;
+    border: 1px solid #e0e0e0;
   }
   th {
     color: #888;
     width: 90px;
     font-weight: 500;
     background: #f7f7f7;
-    border-radius: 6px;
   }
   td {
     color: #333;
+    background: #fff;
+  }
+  tr:last-child th,
+  tr:last-child td {
+    border-bottom: none;
+  }
+  tr th:last-child,
+  tr td:last-child {
+    border-right: none;
   }
 `;
 
