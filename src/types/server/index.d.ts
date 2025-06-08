@@ -16,6 +16,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/api/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 주문 생성(결제 전) */
+        post: operations["crete"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/api/members/social": {
         parameters: {
             query?: never;
@@ -147,6 +164,36 @@ export interface components {
             accessToken: string;
             refreshToken: string;
         };
+        CreateOrderRequest: {
+            /** Format: int64 */
+            productId: number;
+            options: components["schemas"]["ProductOptionRequest"][];
+            /** Format: int64 */
+            memberId: number;
+            memberEmail: string;
+            memberPhone: string;
+            deliveryAddress: string;
+            deliveryDetailAddress: string;
+            postalCode: string;
+            recipientName: string;
+            recipientPhone: string;
+            deliveryRequestMessage: string;
+            /** Format: date */
+            startDate: string;
+            /** Format: date-time */
+            startDateTime: string;
+            /** Format: date-time */
+            endDateTime: string;
+        };
+        ProductOptionRequest: {
+            /** Format: int64 */
+            optionId: number;
+            choiceIds: number[];
+        };
+        CreateOrderResponse: {
+            /** Format: int64 */
+            orderId: number;
+        };
         JoinSocialRequest: {
             /** @enum {string} */
             joinType: "KAKAO" | "NAVER";
@@ -211,6 +258,7 @@ export interface components {
             id: number;
             title: string;
             choices: components["schemas"]["OptionChoiceResponse"][];
+            isMultipleSelectAllowed: boolean;
         };
         QueryProductDetailResponse: {
             /** Format: int64 */
@@ -227,8 +275,15 @@ export interface components {
             stockCount: number;
             bundles: string[];
             options: components["schemas"]["OptionResponse"][];
+            sellerInformation: components["schemas"]["SellerInformation"];
+            productUnavailableDates: string[];
         };
-        CreateOauthUrlResponse: {
+        SellerInformation: {
+            nickname: string;
+            phone: string;
+            email: string;
+        };
+        CreateOAuthUrlResponse: {
             url: string;
         };
         Unit: Record<string, never>;
@@ -261,6 +316,30 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["RefreshTokenResponse"];
+                };
+            };
+        };
+    };
+    crete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateOrderResponse"];
                 };
             };
         };
@@ -399,7 +478,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CreateOauthUrlResponse"];
+                    "*/*": components["schemas"]["CreateOAuthUrlResponse"];
                 };
             };
         };
