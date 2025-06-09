@@ -5,9 +5,12 @@ import RentalListPage from "./pages/rental-list";
 import RentalDetailPage from "./pages/rental-list/[id]";
 import LoginPage from "./pages/login";
 import OauthRedirectPage from "./pages/login/oauth-redirect";
+import NotFound404 from "./pages/NotFound404";
+
 const router = createBrowserRouter([
   {
     path: "/",
+    errorElement: <NotFound404 />,
     element: (
       <Provider>
         <Outlet />
