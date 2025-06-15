@@ -1,54 +1,41 @@
-# React + TypeScript + Vite
+# 캠핑 렌탈 서비스
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+캠핑 용품을 쉽고 편리하게 대여할 수 있는 웹 서비스입니다.
 
-Currently, two official plugins are available:
+> **배포 주소:** [https://d26hv5wp3cuyhn.cloudfront.net/](https://d26hv5wp3cuyhn.cloudfront.net/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 주요 기능
 
-## Expanding the ESLint configuration
+- **렌탈 리스트**: 다양한 캠핑 용품을 한눈에 확인하고 대여할 수 있습니다.
+- **렌탈 상세 페이지**: 각 용품의 상세 정보 및 대여 가능 여부를 확인할 수 있습니다.
+- **로그인/소셜 로그인**: 자체 로그인 및 소셜 계정(OAuth) 연동을 통한 간편 로그인 지원
+- **404 페이지**: 존재하지 않는 경로 접근 시 Not Found 안내
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 기술 스택
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- **프레임워크**: React, Vite
+- **언어**: TypeScript
+- **스타일링**: Emotion
+- **상태 관리/비동기**: React Query
+- **라우팅**: React Router DOM
+- **API 통신**: Axios
+- **날짜 관리**: Day.js
+- **기타**: dotenv, overlay-kit, vite-plugin-svgr
+
+## 프로젝트 구조
+
+```
+src/
+  ├── apis/           # API 관련 코드
+  ├── assets/         # 이미지 및 정적 파일
+  ├── components/     # 공통 컴포넌트 (Navbar 등)
+  ├── hooks/          # 커스텀 훅
+  ├── pages/          # 주요 페이지 (렌탈 리스트, 상세, 로그인 등)
+  ├── styles/         # 전역 스타일
+  ├── theme.ts        # 테마 설정
+  └── types/          # 타입 정의
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+이 프로젝트는 **Cursor 기반 바이브 코딩 학습**을 목적으로 하며, 실제 서비스 운영보다는 코드 작성 및 최신 프론트엔드 개발 환경 경험에 중점을 두고 있습니다.
