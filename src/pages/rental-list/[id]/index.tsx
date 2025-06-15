@@ -1,14 +1,17 @@
 import { useProductDetail } from "../../../hooks/@server/product";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import { useState } from "react";
-
+import RentalBottomSheet from "./components/RentalBottomSheet";
+import Spacing from "../../../components/Spacing";
+import Divider from "../../../components/Divider";
 const RentalDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const productId = Number(id);
   const { data: product } = useProductDetail(productId);
   const [mainImageIdx, setMainImageIdx] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState<{ [optionId: number]: number | undefined }>({});
+  const navigate = useNavigate();
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   if (!product) return <div>존재하지 않는 상품입니다.</div>;
 
@@ -16,6 +19,14 @@ const RentalDetailPage = () => {
 
   return (
     <>
+      <Header>
+        <BackButton onClick={() => navigate(-1)}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 20.5L6 12L15 3.5" stroke="#2A2A2E" stroke-width="1.5" stroke-linecap="square" />
+          </svg>
+        </BackButton>
+        <HeaderTitle>상품 상세</HeaderTitle>
+      </Header>
       <PageWrapper>
         <ContentWrapper>
           <LeftSection>
@@ -46,7 +57,7 @@ const RentalDetailPage = () => {
               <Price>{product.price.disCountedPrice.toLocaleString()}원</Price>
               {product.price.discountRate > 0 && (
                 <Discount>
-                  {product.price.discountRate}%↓{" "}
+                  {product.price.discountRate * 100}%↓{" "}
                   <OriginPrice>{product.price.originalPrice.toLocaleString()}원</OriginPrice>
                 </Discount>
               )}
@@ -57,8 +68,19 @@ const RentalDetailPage = () => {
                 <td>{product.stockCount}개</td>
               </tr>
               <tr>
-                <th>대여자</th>
-                <td>{product.member.nickname}</td>
+                <th rowSpan={4}>판매자</th>
+              </tr>
+              <tr>
+                <th>닉네임</th>
+                <td>{product.sellerInformation.nickname}</td>
+              </tr>
+              <tr>
+                <th>이메일</th>
+                <td>{product.sellerInformation.email}</td>
+              </tr>
+              <tr>
+                <th>연락처</th>
+                <td>{product.sellerInformation.phone}</td>
               </tr>
               <tr>
                 <th>배송</th>
@@ -67,31 +89,7 @@ const RentalDetailPage = () => {
                 </td>
               </tr>
             </InfoTable>
-            {product.options && product.options.length > 0 && (
-              <OptionSelectWrapper>
-                {product.options.map((option) => (
-                  <OptionBox key={option.id}>
-                    <OptionLabel>{option.title}</OptionLabel>
-                    <OptionSelect
-                      value={selectedOptions[option.id] ?? ""}
-                      onChange={(e) => {
-                        const value = e.target.value ? Number(e.target.value) : undefined;
-                        setSelectedOptions((prev) => ({ ...prev, [option.id]: value }));
-                      }}
-                    >
-                      <option value="">선택하세요</option>
-                      {option.choices.map((choice) => (
-                        <option key={choice.id} value={choice.id}>
-                          {choice.name}
-                          {choice.additionalPrice > 0 ? ` (+${choice.additionalPrice.toLocaleString()}원)` : ""}
-                        </option>
-                      ))}
-                    </OptionSelect>
-                  </OptionBox>
-                ))}
-              </OptionSelectWrapper>
-            )}
-            <RentButton>대여하기</RentButton>
+            <Divider />
             <SectionTitle>상품 설명</SectionTitle>
             <Description>{product.description}</Description>
           </RightSection>
@@ -104,6 +102,10 @@ const RentalDetailPage = () => {
           <NoDetailImage>상세 이미지가 없습니다.</NoDetailImage>
         )}
       </DetailImagesWrapper>
+      {/* 바텀시트 */}
+      <Spacing height={200} />
+      <RentalBottomSheet product={product} open={isBottomSheetOpen} onClose={() => setIsBottomSheetOpen(false)} />
+      {!isBottomSheetOpen && <FloatingButton onClick={() => setIsBottomSheetOpen(true)}>대여하기</FloatingButton>}
     </>
   );
 };
@@ -111,7 +113,6 @@ const RentalDetailPage = () => {
 export default RentalDetailPage;
 
 const PageWrapper = styled.div`
-  background: #fafbfc;
   min-height: 100vh;
   padding: 2rem 0 0 0;
 `;
@@ -122,8 +123,7 @@ const ContentWrapper = styled.div`
   max-width: 1100px;
   margin: 0 auto;
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+
   padding: 2.5rem 2rem;
   @media (max-width: 900px) {
     flex-direction: column;
@@ -143,7 +143,6 @@ const MainImageBox = styled.div`
   width: 420px;
   height: 320px;
   background: #f5f5f5;
-  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,6 +196,8 @@ const Title = styled.h1`
   font-size: 2.1rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  word-break: break-all;
+  line-height: 1.4;
 `;
 
 const PriceBox = styled.div`
@@ -228,37 +229,31 @@ const InfoTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin: 1.2rem 0 1.5rem 0;
+  border: 1px solid #e0e0e0;
   th,
   td {
     padding: 0.5rem 0.7rem;
     text-align: left;
     font-size: 1.05rem;
+    border: 1px solid #e0e0e0;
   }
   th {
     color: #888;
     width: 90px;
     font-weight: 500;
     background: #f7f7f7;
-    border-radius: 6px;
   }
   td {
     color: #333;
+    background: #fff;
   }
-`;
-
-const RentButton = styled.button`
-  background: #4caf50;
-  color: #fff;
-  font-size: 1.15rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  padding: 0.9rem 0;
-  margin: 1.2rem 0 0.5rem 0;
-  cursor: pointer;
-  transition: background 0.2s;
-  &:hover {
-    background: #388e3c;
+  tr:last-child th,
+  tr:last-child td {
+    border-bottom: none;
+  }
+  tr th:last-child,
+  tr td:last-child {
+    border-right: none;
   }
 `;
 
@@ -286,8 +281,9 @@ const DetailImage = styled.img`
   width: 100%;
   max-width: 800px;
   border-radius: 10px;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.07);
   object-fit: contain;
+
+  margin: 0 auto;
 `;
 
 const NoDetailImage = styled.div`
@@ -297,30 +293,53 @@ const NoDetailImage = styled.div`
   text-align: center;
 `;
 
-const OptionSelectWrapper = styled.div`
-  margin: 1.2rem 0 1.5rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-`;
-
-const OptionBox = styled.div`
+const Header = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 20px;
+  padding: 1.1rem 2rem 1.1rem 1.2rem;
+  border-bottom: 1px solid #eee;
 `;
 
-const OptionLabel = styled.label`
+const BackButton = styled.button`
+  background: none;
+  border: none;
+  color: #388e3c;
   font-size: 1.08rem;
-  color: #333;
-  min-width: 90px;
-`;
-
-const OptionSelect = styled.select`
-  font-size: 1.08rem;
-  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.3rem 0.7rem 0.3rem 0.2rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
-  background: #fafbfc;
-  min-width: 180px;
+  transition: background 0.15s;
+`;
+
+const HeaderTitle = styled.h1`
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0;
+`;
+
+const FloatingButton = styled.button`
+  position: fixed;
+  right: 24px;
+  bottom: 32px;
+  z-index: 300;
+  background: #4caf50;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 50px;
+  padding: 1.1rem 2.1rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.13);
+  cursor: pointer;
+  transition: background 0.18s;
+  &:hover {
+    background: #388e3c;
+  }
 `;
