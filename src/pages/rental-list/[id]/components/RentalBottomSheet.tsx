@@ -54,7 +54,7 @@ const RentalBottomSheet = ({ product, open, onClose }: RentalBottomSheetProps) =
                   <OptionBox key={option.id}>
                     <OptionLabel>
                       {option.title}
-                      {option.required && <span style={{ color: "red", marginLeft: 4 }}>*</span>}
+                      {option.isRequired && <span style={{ color: "red", marginLeft: 4 }}>*</span>}
                     </OptionLabel>
                     <OptionSelect
                       value={selectedOptions[option.id] ?? ""}
@@ -83,7 +83,7 @@ const RentalBottomSheet = ({ product, open, onClose }: RentalBottomSheetProps) =
           <BottomRentButton
             disabled={
               product.options &&
-              product.options.filter((option) => option.required).some((option) => !selectedOptions[option.id])
+              product.options.filter((option) => option.isRequired).some((option) => !selectedOptions[option.id])
             }
           >
             대여하기
