@@ -113,18 +113,15 @@ const OrderFormPage = () => {
   const [searchParams] = useSearchParams();
   const productId = searchParams.get("productId");
 
-  // 입력값 상태
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [addressDetail, setAddressDetail] = useState("");
-  const [city, setCity] = useState("");
   const [zip, setZip] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`이름: ${name}\n전화번호: ${phone}\n주소: ${address} ${addressDetail}\n도시: ${city}\n우편번호: ${zip}`);
-    // 실제 주문 처리 로직은 여기에 추가
+    alert(`이름: ${name}\n전화번호: ${phone}\n주소: ${address} ${addressDetail}\n우편번호: ${zip}`);
   };
 
   return (
@@ -138,7 +135,9 @@ const OrderFormPage = () => {
           </h2>
           <form onSubmit={handleSubmit}>
             <div style={fieldGap}>
-              <label style={labelStyle}>이름</label>
+              <label style={labelStyle}>
+                이름 <span style={{ color: "#e53935" }}>*</span>
+              </label>
               <input
                 type="text"
                 value={name}
@@ -149,7 +148,9 @@ const OrderFormPage = () => {
               />
             </div>
             <div style={fieldGap}>
-              <label style={labelStyle}>전화번호</label>
+              <label style={labelStyle}>
+                전화번호 <span style={{ color: "#e53935" }}>*</span>
+              </label>
               <input
                 type="tel"
                 value={phone}
@@ -160,7 +161,22 @@ const OrderFormPage = () => {
               />
             </div>
             <div style={fieldGap}>
-              <label style={labelStyle}>주소</label>
+              <label style={labelStyle}>
+                우편번호 <span style={{ color: "#e53935" }}>*</span>
+              </label>
+              <input
+                type="text"
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
+                placeholder="우편번호"
+                required
+                style={inputStyle}
+              />
+            </div>
+            <div style={fieldGap}>
+              <label style={labelStyle}>
+                주소 <span style={{ color: "#e53935" }}>*</span>
+              </label>
               <input
                 type="text"
                 value={address}
@@ -171,7 +187,9 @@ const OrderFormPage = () => {
               />
             </div>
             <div style={fieldGap}>
-              <label style={labelStyle}>상세 주소</label>
+              <label style={labelStyle}>
+                상세 주소 <span style={{ color: "#888", fontWeight: 400 }}>(선택)</span>
+              </label>
               <input
                 type="text"
                 value={addressDetail}
@@ -180,30 +198,7 @@ const OrderFormPage = () => {
                 style={inputStyle}
               />
             </div>
-            <div style={{ display: "flex", gap: 12, ...fieldGap }}>
-              <div style={{ flex: 1 }}>
-                <label style={labelStyle}>도시</label>
-                <input
-                  type="text"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  placeholder="도시"
-                  required
-                  style={inputStyle}
-                />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label style={labelStyle}>우편번호</label>
-                <input
-                  type="text"
-                  value={zip}
-                  onChange={(e) => setZip(e.target.value)}
-                  placeholder="우편번호"
-                  required
-                  style={inputStyle}
-                />
-              </div>
-            </div>
+
             <button type="submit" style={buttonStyle}>
               주문 완료
             </button>
