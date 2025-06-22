@@ -7,6 +7,7 @@ import LoginPage from "./pages/login";
 import OauthRedirectPage from "./pages/login/oauth-redirect";
 import NotFound404 from "./pages/NotFound404";
 import OrderFormPage from "./pages/order/form";
+import MyOrdersPage from "./pages/my-orders";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "order",
         children: [{ path: "form", element: <OrderFormPage /> }],
+      },
+      {
+        path: "my-orders",
+        element: <MyOrdersPage />,
       },
     ],
   },
