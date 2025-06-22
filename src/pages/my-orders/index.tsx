@@ -3,8 +3,10 @@ import { Suspense } from "react";
 import Navbar from "../../components/Navbar";
 import { useMyOrders, useCancelOrder } from "../../hooks/@server/order";
 import { components } from "../../types/server";
+import { overlay } from "overlay-kit";
+import OrderDetailDialog from "./components/OrderDetailDialog";
 
-const OrderStatus: Record<components["schemas"]["QueryMyOrderResponse"]["status"], string> = {
+export const OrderStatus: Record<components["schemas"]["QueryMyOrderResponse"]["status"], string> = {
   PAYMENT_PENDING: "결제 대기",
   CONFIRMATION_PENDING: "확정 대기",
   DELIVERY_READY: "배송 준비중",
@@ -27,6 +29,10 @@ const MyOrderList = () => {
   const { data } = useMyOrders();
   const { mutate: cancelOrder } = useCancelOrder();
   const orders = data.pages.flatMap((page) => page.responses);
+
+  const handleShowDetails = (order: components["schemas"]["QueryMyOrderResponse"]) => {
+    overlay.open(({ close, isOpen }) => <OrderDetailDialog order={order} isOpen={isOpen} close={close} />);
+  };
 
   const handleCancelOrder = (id: number) => {
     if (window.confirm("정말로 주문을 취소하시겠습니까?")) {
@@ -58,6 +64,7 @@ const MyOrderList = () => {
                 <div>총 가격: {order.totalPrice.toLocaleString()}원</div>
               </CardBody>
               <CardFooter>
+                <DetailButton onClick={() => handleShowDetails(order)}>상세보기</DetailButton>
                 <CancelButton onClick={() => handleCancelOrder(order.id)}>주문 취소</CancelButton>
               </CardFooter>
             </OrderCard>
@@ -147,6 +154,21 @@ const CardFooter = styled.div`
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
+  gap: 8px;
+`;
+
+const DetailButton = styled.button`
+  background: #222;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+  &:hover {
+    background: #444;
+  }
 `;
 
 const CancelButton = styled.button`
