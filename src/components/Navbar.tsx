@@ -3,10 +3,12 @@ import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import { theme } from "../theme";
 import { useEffect, useState } from "react";
+import Drawer from "./Drawer";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -15,27 +17,46 @@ const Navbar = () => {
 
   const handleAuthClick = () => {
     if (isLoggedIn) {
-      // 로그아웃 처리
       localStorage.removeItem("accessToken");
       setIsLoggedIn(false);
       navigate("/");
     } else {
-      // 로그인 페이지로 이동
       navigate("/login");
     }
+    setIsDrawerOpen(false);
   };
 
   return (
-    <nav css={navStyle}>
-      <div css={containerStyle}>
-        <h1 css={logoStyle} onClick={() => navigate("/")}>
-          캠핑 렌탈
-        </h1>
-        <button css={[buttonStyle, isLoggedIn ? logoutButtonStyle : loginButtonStyle]} onClick={handleAuthClick}>
-          {isLoggedIn ? "로그아웃" : "로그인"}
-        </button>
-      </div>
-    </nav>
+    <>
+      <nav css={navStyle}>
+        <div css={containerStyle}>
+          <h1 css={logoStyle} onClick={() => navigate("/")}>
+            캠핑 렌탈
+          </h1>
+          <button css={menuButtonStyle} onClick={() => setIsDrawerOpen(true)}>
+            ☰
+          </button>
+        </div>
+      </nav>
+      <Drawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+        <div css={drawerContentStyle}>
+          {isLoggedIn && (
+            <button
+              css={drawerMenuButton}
+              onClick={() => {
+                navigate("/my-orders");
+                setIsDrawerOpen(false);
+              }}
+            >
+              내 주문
+            </button>
+          )}
+          <button css={isLoggedIn ? drawerLogoutButton : drawerMenuButton} onClick={handleAuthClick}>
+            {isLoggedIn ? "로그아웃" : "로그인"}
+          </button>
+        </div>
+      </Drawer>
+    </>
   );
 };
 
@@ -44,7 +65,7 @@ const navStyle = css`
   box-shadow: ${theme.shadows.sm};
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 999;
 `;
 
 const containerStyle = css`
@@ -64,34 +85,49 @@ const logoStyle = css`
   cursor: pointer;
 `;
 
-// 기본 버튼 스타일
-const buttonStyle = css`
-  padding: ${theme.spacing.xs} ${theme.spacing.sm};
+const menuButtonStyle = css`
+  background: none;
   border: none;
-  border-radius: ${theme.borderRadius.sm};
+  font-size: 24px;
   cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
+  color: ${theme.colors.text.primary};
 `;
 
-// 로그인 버튼 스타일
-const loginButtonStyle = css`
-  background-color: ${theme.colors.primary.main};
-  color: white;
+const drawerContentStyle = css`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 60px;
+`;
+
+const drawerMenuButton = css`
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: ${theme.colors.grey[50]};
+  color: ${theme.colors.text.primary};
+  transition: all 0.2s ease;
 
   &:hover {
-    background-color: ${theme.colors.primary.dark};
+    background-color: ${theme.colors.grey[100]};
+    transform: translateX(4px);
   }
 `;
 
-// 로그아웃 버튼 스타일
-const logoutButtonStyle = css`
-  background-color: ${theme.colors.grey[100]};
-  color: ${theme.colors.text.primary};
-  border: 1px solid ${theme.colors.grey[300]};
+const drawerLogoutButton = css`
+  ${drawerMenuButton};
 
   &:hover {
-    background-color: ${theme.colors.grey[200]};
+    background-color: #fee2e2;
+    color: #b91c1c;
+    transform: translateX(4px);
   }
 `;
 
