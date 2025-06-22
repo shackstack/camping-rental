@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { components } from "../../../../types/server";
 import styled from "@emotion/styled";
-
+import { useNavigate } from "react-router-dom";
 interface RentalBottomSheetProps {
   product: components["schemas"]["QueryProductDetailResponse"];
   open: boolean;
@@ -10,6 +10,7 @@ interface RentalBottomSheetProps {
 
 const RentalBottomSheet = ({ product, open, onClose }: RentalBottomSheetProps) => {
   const [selectedOptions, setSelectedOptions] = useState<{ [optionId: number]: number | undefined }>({});
+  const navigate = useNavigate();
 
   // 총 가격 계산 함수
   const getTotalPrice = () => {
@@ -81,6 +82,9 @@ const RentalBottomSheet = ({ product, open, onClose }: RentalBottomSheetProps) =
             <TotalPrice>{getTotalPrice().toLocaleString()}원</TotalPrice>
           </PriceSummary>
           <BottomRentButton
+            onClick={() => {
+              navigate(`/order/form?productId=${product.id}`);
+            }}
             disabled={
               product.options &&
               product.options.filter((option) => option.isRequired).some((option) => !selectedOptions[option.id])

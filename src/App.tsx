@@ -6,6 +6,7 @@ import RentalDetailPage from "./pages/rental-list/[id]";
 import LoginPage from "./pages/login";
 import OauthRedirectPage from "./pages/login/oauth-redirect";
 import NotFound404 from "./pages/NotFound404";
+import OrderFormPage from "./pages/order/form";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
           { index: true, element: <RentalListPage /> },
           { path: ":id", element: <RentalDetailPage /> },
         ],
+      },
+      {
+        path: "order",
+        children: [{ path: "form", element: <OrderFormPage /> }],
       },
     ],
   },
