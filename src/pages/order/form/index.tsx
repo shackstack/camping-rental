@@ -1,6 +1,138 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+const OrderFormPage = () => {
+  const [searchParams] = useSearchParams();
+  const productId = searchParams.get("productId");
+
+  // 옵션 선택값 파싱
+  const optionSelections: { [optionId: string]: string } = {};
+  searchParams.forEach((value, key) => {
+    if (key.startsWith("option")) {
+      const optionId = key.replace("option", "");
+      optionSelections[optionId] = value;
+    }
+  });
+
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [addressDetail, setAddressDetail] = useState("");
+  const [zip, setZip] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert(`이름: ${name}\n전화번호: ${phone}\n주소: ${address} ${addressDetail}\n우편번호: ${zip}`);
+  };
+
+  return (
+    <>
+      <style>{responsiveStyle}</style>
+      <div className="order-form-container" style={containerStyle}>
+        {/* 좌측: 입력 폼 */}
+        <div className="order-form-card" style={cardStyle}>
+          <h2 className="order-form-title" style={titleStyle}>
+            배송 정보 입력
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <div style={fieldGap}>
+              <label style={labelStyle}>
+                이름 <span style={{ color: "#e53935" }}>*</span>
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="이름을 입력하세요"
+                required
+                style={inputStyle}
+              />
+            </div>
+            <div style={fieldGap}>
+              <label style={labelStyle}>
+                전화번호 <span style={{ color: "#e53935" }}>*</span>
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="전화번호를 입력하세요"
+                required
+                style={inputStyle}
+              />
+            </div>
+            <div style={fieldGap}>
+              <label style={labelStyle}>
+                우편번호 <span style={{ color: "#e53935" }}>*</span>
+              </label>
+              <input
+                type="text"
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
+                placeholder="우편번호"
+                required
+                style={inputStyle}
+              />
+            </div>
+            <div style={fieldGap}>
+              <label style={labelStyle}>
+                주소 <span style={{ color: "#e53935" }}>*</span>
+              </label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="주소를 입력하세요"
+                required
+                style={inputStyle}
+              />
+            </div>
+            <div style={fieldGap}>
+              <label style={labelStyle}>
+                상세 주소 <span style={{ color: "#888", fontWeight: 400 }}>(선택)</span>
+              </label>
+              <input
+                type="text"
+                value={addressDetail}
+                onChange={(e) => setAddressDetail(e.target.value)}
+                placeholder="상세 주소를 입력하세요"
+                style={inputStyle}
+              />
+            </div>
+
+            <button type="submit" style={buttonStyle}>
+              주문 완료
+            </button>
+          </form>
+        </div>
+        {/* 우측: 주문 요약 */}
+        <div className="order-form-summary" style={summaryCardStyle}>
+          <h3 style={summaryTitleStyle}>주문 요약</h3>
+          <div style={summaryTextStyle}>
+            상품 ID: <b>{productId || "-"}</b>
+          </div>
+          {/* 옵션 선택값 표시 */}
+          {Object.keys(optionSelections).length > 0 && (
+            <div style={{ marginBottom: 10, color: "#555", fontSize: 15 }}>
+              선택 옵션:
+              <br />
+              {Object.entries(optionSelections).map(([optionId, choiceId]) => (
+                <span key={optionId}>
+                  옵션 {optionId}: <b>{choiceId}</b>
+                  <br />
+                </span>
+              ))}
+            </div>
+          )}
+          <div style={summaryInfoStyle}>결제 및 배송 정보는 입력하신 연락처로 안내됩니다.</div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default OrderFormPage;
+
 const containerStyle: React.CSSProperties = {
   maxWidth: 960,
   margin: "48px auto",
@@ -108,113 +240,3 @@ const responsiveStyle = `
   }
 }
 `;
-
-const OrderFormPage = () => {
-  const [searchParams] = useSearchParams();
-  const productId = searchParams.get("productId");
-
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [addressDetail, setAddressDetail] = useState("");
-  const [zip, setZip] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert(`이름: ${name}\n전화번호: ${phone}\n주소: ${address} ${addressDetail}\n우편번호: ${zip}`);
-  };
-
-  return (
-    <>
-      <style>{responsiveStyle}</style>
-      <div className="order-form-container" style={containerStyle}>
-        {/* 좌측: 입력 폼 */}
-        <div className="order-form-card" style={cardStyle}>
-          <h2 className="order-form-title" style={titleStyle}>
-            배송 정보 입력
-          </h2>
-          <form onSubmit={handleSubmit}>
-            <div style={fieldGap}>
-              <label style={labelStyle}>
-                이름 <span style={{ color: "#e53935" }}>*</span>
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="이름을 입력하세요"
-                required
-                style={inputStyle}
-              />
-            </div>
-            <div style={fieldGap}>
-              <label style={labelStyle}>
-                전화번호 <span style={{ color: "#e53935" }}>*</span>
-              </label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="전화번호를 입력하세요"
-                required
-                style={inputStyle}
-              />
-            </div>
-            <div style={fieldGap}>
-              <label style={labelStyle}>
-                우편번호 <span style={{ color: "#e53935" }}>*</span>
-              </label>
-              <input
-                type="text"
-                value={zip}
-                onChange={(e) => setZip(e.target.value)}
-                placeholder="우편번호"
-                required
-                style={inputStyle}
-              />
-            </div>
-            <div style={fieldGap}>
-              <label style={labelStyle}>
-                주소 <span style={{ color: "#e53935" }}>*</span>
-              </label>
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="주소를 입력하세요"
-                required
-                style={inputStyle}
-              />
-            </div>
-            <div style={fieldGap}>
-              <label style={labelStyle}>
-                상세 주소 <span style={{ color: "#888", fontWeight: 400 }}>(선택)</span>
-              </label>
-              <input
-                type="text"
-                value={addressDetail}
-                onChange={(e) => setAddressDetail(e.target.value)}
-                placeholder="상세 주소를 입력하세요"
-                style={inputStyle}
-              />
-            </div>
-
-            <button type="submit" style={buttonStyle}>
-              주문 완료
-            </button>
-          </form>
-        </div>
-        {/* 우측: 주문 요약 */}
-        <div className="order-form-summary" style={summaryCardStyle}>
-          <h3 style={summaryTitleStyle}>주문 요약</h3>
-          <div style={summaryTextStyle}>
-            상품 ID: <b>{productId || "-"}</b>
-          </div>
-          <div style={summaryInfoStyle}>결제 및 배송 정보는 입력하신 연락처로 안내됩니다.</div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default OrderFormPage;

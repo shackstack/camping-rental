@@ -83,7 +83,14 @@ const RentalBottomSheet = ({ product, open, onClose }: RentalBottomSheetProps) =
           </PriceSummary>
           <BottomRentButton
             onClick={() => {
-              navigate(`/order/form?productId=${product.id}`);
+              // 옵션 쿼리 파라미터 생성
+              const optionParams = Object.entries(selectedOptions)
+                .filter(([, value]) => value !== undefined)
+                .map(([optionId, choiceId]) => `option${optionId}=${choiceId}`)
+                .join("&");
+              // 최종 URL
+              const url = `/order/form?productId=${product.id}${optionParams ? `&${optionParams}` : ""}`;
+              navigate(url);
             }}
             disabled={
               product.options &&
